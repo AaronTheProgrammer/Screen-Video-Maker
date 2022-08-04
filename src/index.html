@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .videoBox {
+            border-style: solid;
+            border-color: black;
+            width: 360px;
+            height: 350px;
+            margin-bottom: 20px;
+        }
+
+        .videoControls {
+            margin-left: 50px;
+            margin-top: 50px;
+        }
+
+        .playOrPauseButton {
+            margin-bottom: 10px;
+        }
+
+        .endButton {
+            margin-left: 10px;
+        }
+
+        .savingInfo {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="hidden" id="recording" value="0" />
+    <div class="videoBox">
+        <div class="videoControls">
+            <div class="playOrPauseButton">
+                <button type="button" id="record" onclick="playOrPause()">Start Recording</button>
+                <div class="recordingTime" id="recordingTime"></div>
+            </div>
+            <div class="endButton">
+                <a id="downloadLink"><button type="button" id="endRecording" onclick="stopRecording()">End
+                        Recording</button></a>
+            </div>
+            <div class="savingInfo">
+                When you click "Start Recording", the whole screen will be recorded, and it will include the audio
+                coming from the computer. The video will also appear below. Then, when you click the "Download Video"
+                button below, you will be shown a "Save As" prompt to download your recorded video. If you change the 
+                file name from the default name, then you must include the .mp4 file extension when naming the file.
+            </div>
+        </div>
+    </div>
+    <div id="saveAsDiv" class="saveAs">
+        <button type="button" id="save" onclick="download()" disabled="true">Download Video</button>
+        <button type="button" id="cancel" onclick="cancelDownload()" disabled="true">Cancel Download</button>
+    </div>
+    <div id="videoItself" class="videoItself"></div>
+    <script src="./ScreenRecorder.js"></script>
+</body>
+
+</html>
