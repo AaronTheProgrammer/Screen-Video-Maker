@@ -1,13 +1,18 @@
+//console.log(window.versions.node()); //node 12.13.0
+//console.log(window.versions.electron()); //electron 8.2.0
+const dialog = window.api.dialog();
+const path = window.api.path();
+const fs = window.api.fs();
+
 window.api.getScreen();
 let chunks = [];
 let mediaStream = null;
 let recorder = null;
 let seconds = 0;
-let videoNumber = 1;
-let filename = "";
-let videoLink = document.getElementById("downloadLink");
 let videoURL = "";
 let myInterval = null;
+let blob = null;
+let base64Data = null;
 
 
 async function setupMediaStream() {
@@ -37,7 +42,7 @@ async function setupMediaStream() {
     recorder.onstop = function () {
         let mostRecentChunk = [];
         mostRecentChunk.push(chunks[chunks.length - 1]);
-        let blob = new Blob(mostRecentChunk, { 'type': 'video/mp4' });
+        blob = new Blob(mostRecentChunk, { 'type': 'video/mp4' });
         videoURL = window.URL.createObjectURL(blob);
         document.getElementById("recordingTime").innerHTML = "";
         seconds = 0;
@@ -126,17 +131,44 @@ function countTime() {
 }
 
 function download() {
-    filename = "video " + videoNumber + ".mp4";
-    videoNumber++;
-    videoLink.setAttribute("href", videoURL);
-    videoLink.setAttribute("download", filename);
-    document.getElementById("endRecording").click();
-    videoLink.removeAttribute("download");
-    videoLink.removeAttribute("href");
+    dialog.showSaveDialog({
+        title: 'Save As',
+        buttonLabel: 'Save',
+        // Restricting the user to only mp4 Files.
+        filters: [
+            {
+                name: 'MP4 File (Video File)',
+                extensions: ['mp4']
+            }
+        ]
+    }).then(file => {
+        // Stating whether dialog operation was cancelled or not.
+        console.log(file.canceled);
+        if (!file.canceled) {
+            console.log(file.filePath.toString());
+            blobToDataConverter(blob, file);
+        }
+    });
 }
 
 function cancelDownload() {
     document.getElementById("videoItself").innerHTML = "";
+    document.getElementById("successfullySaved").innerHTML = "";
     document.getElementById("save").disabled = true;
     document.getElementById("cancel").disabled = true;
 }
+
+// converts blob to base64
+function blobToDataConverter(theBlob, file) {
+    let blobReader = new FileReader();
+    blobReader.onload = function () {
+        let dataUrl = blobReader.result;
+        base64Data = dataUrl.split(',')[1];
+        let buffer = window.api.buffer(base64Data);
+        fs.writeFile(file.filePath.toString(), buffer, function (err) {
+            if (err) throw err;
+            document.getElementById("successfullySaved").innerHTML = "Saved to " + file.filePath.toString();
+        });
+    };
+    blobReader.readAsDataURL(theBlob);
+};
