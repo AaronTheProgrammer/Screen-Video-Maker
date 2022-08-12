@@ -19,3 +19,6 @@ npm run package -- --platform=<platform> arch=<architecture>
 Example: npm run package -- --platform=linux --arch=x64 (this would package it for linux)
 
 An application file is produced in a newly created 'out' folder in the root directory of your app.
+
+These are the types of apps that need to be installed, so you can't run it with just the executable alone. 
+You need the whole project folder.
