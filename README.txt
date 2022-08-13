@@ -23,3 +23,11 @@ An application file is produced in a newly created 'out' folder in the root dire
 
 These are the types of apps that need to be installed, so you can't run it with just the executable alone. 
 You need the whole project folder.
+
+In order to create a make file or an installer for the application, use the following command:
+
+npm run make
+
+The out/make folder will have a Windows installer for the desktop application.
+
+When you run this command without any parameters, by default it creates the installer for the platform which you are using for development.
