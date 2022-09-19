@@ -13,6 +13,7 @@ let videoURL = "";
 let myInterval = null;
 let blob = null;
 let base64Data = null;
+let videoNumber = 1;
 
 
 async function setupMediaStream() {
@@ -50,6 +51,7 @@ async function setupMediaStream() {
         document.getElementById("record").innerHTML = "Start Recording";
         let video = document.createElement("video");
         video.src = videoURL;
+        video.setAttribute("id", "theVideo");
         video.controls = true;
         video.style.width = "400px";
         video.style.height = "400px";
@@ -162,13 +164,27 @@ function cancelDownload() {
 function blobToDataConverter(theBlob, file) {
     let blobReader = new FileReader();
     blobReader.onload = function () {
-        let dataUrl = blobReader.result;
-        base64Data = dataUrl.split(',')[1];
-        let buffer = window.api.buffer(base64Data);
-        fs.writeFile(file.filePath.toString(), buffer, function (err) {
-            if (err) throw err;
-            document.getElementById("successfullySaved").innerHTML = "Saved to " + file.filePath.toString();
-        });
+        try {
+            let dataUrl = blobReader.result;
+            base64Data = dataUrl.split(',')[1];
+            let buffer = window.api.buffer(base64Data);
+            fs.writeFile(file.filePath.toString(), buffer, function (err) {
+                if (err) throw err;
+                document.getElementById("successfullySaved").innerHTML = "Saved to " + file.filePath.toString();
+            });
+        } catch(error) {
+            console.log(error);
+            let downloadLink = document.createElement("a");
+            downloadLink.setAttribute("id", "downloadLink");
+            downloadLink.setAttribute("href", videoURL);
+            downloadLink.setAttribute("download", "video " + videoNumber);
+            downloadLink.innerHTML = "Click here to download the video. Something went wrong with the download button";
+            document.getElementById("videoItself").appendChild(downloadLink);
+            downloadLink.onclick = function() {
+                document.getElementById("successfullySaved").innerHTML = "Saved as video " + videoNumber + ".mp4 in your downloads folder" ;
+                videoNumber++;
+            }
+        }
     };
     blobReader.readAsDataURL(theBlob);
 };
