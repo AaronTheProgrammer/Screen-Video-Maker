@@ -4,6 +4,7 @@ const dialog = electron.remote.dialog;
 const path = require("path");
 const fs = require("fs");
 
+
 const Buffer = require('buffer/').Buffer;
 //console.log(Buffer.from("41", 'hex')[0]); returns 65
 
@@ -19,7 +20,9 @@ contextBridge.exposeInMainWorld("api", {
     dialog: () => dialog,
     path: () => path,
     fs: () => fs,
-    buffer: (data) => Buffer.from(data, 'base64')
+    buffer: (data) => Buffer.from(data, 'base64'),
+    minimizeWindow: () => ipcRenderer.send('videoStart'),
+    onPauseRecording: (callback) => ipcRenderer.on('pauseTheRecording', callback)
 });
 
 contextBridge.exposeInMainWorld('versions', {
