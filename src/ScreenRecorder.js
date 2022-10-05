@@ -42,11 +42,11 @@ async function setupMediaStream() {
     });
     recorder.onstop = function () {
         let mostRecentChunk = [];
-        mostRecentChunk.push(chunks[chunks.length - 1]);
+        //mostRecentChunk.push(chunks[chunks.length - 1]);
+        mostRecentChunk.push(...chunks);
         blob = new Blob(mostRecentChunk, { 'type': 'video/mp4' });
         videoURL = window.URL.createObjectURL(blob);
         document.getElementById("recordingTime").innerHTML = "";
-        seconds = 0;
         document.getElementById("recording").value = 0;
         document.getElementById("record").innerHTML = "Start Recording";
         let video = document.createElement("video");
@@ -56,10 +56,35 @@ async function setupMediaStream() {
         video.style.width = "400px";
         video.style.height = "400px";
         document.getElementById("videoItself").appendChild(video);
+        let seekBox = document.createElement("input");
+        seekBox.setAttribute("type", "textbox");
+        seekBox.setAttribute("id", "seekBox");
+        let seekButton = document.createElement("button");
+        seekButton.setAttribute("id", "seekButton");
+        seekButton.innerHTML = "Seek Time (seconds)";
+        seekButton.setAttribute("onclick", "seekTime()");
+        document.getElementById("videoItself").appendChild(seekBox);
+        document.getElementById("videoItself").appendChild(seekButton);
+        let videoLength = document.createElement("p");
+        videoLength.setAttribute("id", "videoLength");
+        videoLength.innerHTML = "The length of the video is " + seconds + " seconds";
+        document.getElementById("videoItself").appendChild(videoLength);
+        seconds = 0;
     };
+    window.api.onPauseRecording(() => {
+        if(recorder.state != 'inactive' && recorder.state != 'paused') {
+            pause();
+        }
+    });
 }
 
 setupMediaStream();
+
+function seekTime() {
+    let seekBox = document.getElementById("seekBox");
+    let video = document.getElementById("theVideo");
+    video.currentTime = parseInt(seekBox.value);
+}
 
 function playOrPause() {
     const recording = parseInt(document.getElementById("recording").value);
@@ -68,8 +93,10 @@ function playOrPause() {
 
 function record() {
     if (recorder != null) {
+        window.api.minimizeWindow();
         if (recorder.state == "inactive") {
-            recorder.start();
+            chunks = [];
+            recorder.start(1000);
         } else if (recorder.state == "paused") {
             recorder.resume();
         }
@@ -172,7 +199,7 @@ function blobToDataConverter(theBlob, file) {
                 if (err) throw err;
                 document.getElementById("successfullySaved").innerHTML = "Saved to " + file.filePath.toString();
             });
-        } catch(error) {
+        } catch (error) {
             console.log(error);
             let downloadLink = document.createElement("a");
             downloadLink.setAttribute("id", "downloadLink");
@@ -180,8 +207,8 @@ function blobToDataConverter(theBlob, file) {
             downloadLink.setAttribute("download", "video " + videoNumber);
             downloadLink.innerHTML = "Click here to download the video. Something went wrong with the download button";
             document.getElementById("videoItself").appendChild(downloadLink);
-            downloadLink.onclick = function() {
-                document.getElementById("successfullySaved").innerHTML = "Saved as video " + videoNumber + ".mp4 in your downloads folder" ;
+            downloadLink.onclick = function () {
+                document.getElementById("successfullySaved").innerHTML = "Saved as video " + videoNumber + ".mp4 in your downloads folder";
                 videoNumber++;
             }
         }
