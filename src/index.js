@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 const path = require("path");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -35,12 +35,21 @@ const createWindow = () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  
+  mainWindow.on('restore', () => {
+    mainWindow.webContents.send('pauseTheRecording');
+  });
+ 
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow();
+  ipcMain.on('videoStart', minimizeWindow);
+});
 
 
 // Quit when all windows are closed.
@@ -62,3 +71,7 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+function minimizeWindow() {
+  //console.log('Came here');
+  mainWindow.minimize();
+}
