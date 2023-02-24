@@ -1,6 +1,6 @@
 {
-  "name": "screenvideoapp",
-  "productName": "screenvideoapp",
+  "name": "screen_video_maker",
+  "productName": "Screen Video Maker",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/index.js",
@@ -11,7 +11,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
   },
-  "keywords": [],
+  "keywords": ["screen recorder", "YouTube video", "video", "screen", "recording", "audio", "faceless video"],
   "author": "aaron",
   "license": "MIT",
   "config": {
@@ -32,7 +32,7 @@
         "packageManager": "npm"
       },
       "electronWinstallerConfig": {
-        "name": "screenvideoapp"
+        "name": "ScreenVideoMaker"
       },
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
@@ -41,8 +41,8 @@
         "name": ""
       },
       "windowsStoreConfig": {
-        "packageName": "",
-        "name": "screenvideoapp"
+        "packageName": "Screen Video Maker",
+        "name": "Screen Video Maker"
       }
     }
   },
