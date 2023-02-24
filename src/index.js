@@ -40,6 +40,10 @@ const createWindow = () => {
   mainWindow.on('restore', () => {
     mainWindow.webContents.send('pauseTheRecording');
   });
+
+  mainWindow.on('maximize', () => {
+    mainWindow.webContents.send('pauseTheRecording');
+  });
  
 };
 
