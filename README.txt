@@ -6,7 +6,7 @@ sounds from their computer, but you can also hear the person speaking as well. I
 then you can actually do so with this app and you don't have to spend a lot of money on a fancy webcam.
 
 
-<h2>Do you want to try it out for yourself? Download the installer file with this link:</h2>
+Do you want to try it out for yourself? Download the installer file with this link:
 https://drive.google.com/uc?export=download&id=1hInf3aN_GREZAGr7WMz8GfmEs3HQIp0s
 
 This app is for Windows by the way.
