@@ -3,13 +3,14 @@ const electron = require("electron");
 const dialog = electron.remote.dialog;
 const path = require("path");
 const fs = require("fs");
+const webmFixDuration = require('webm-fix-duration').webmFixDuration;
 
 
 const Buffer = require('buffer/').Buffer;
 //console.log(Buffer.from("41", 'hex')[0]); returns 65
 
 
-
+let fixedBlob = "";
 
 
 // Expose protected methods off of window (ie.
